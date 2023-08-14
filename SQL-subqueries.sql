@@ -183,8 +183,11 @@ SELECT
 FROM
     payment
 GROUP BY customer_id
-HAVING SUM(amount) > (SELECT 
-        AVG(amount)
+HAVING total_amount_spent > (SELECT 
+        AVG(total_amount_spent)
     FROM
-        payment)
-ORDER BY total_amount_spent DESC;
+        (SELECT 
+            customer_id, SUM(amount) AS total_amount_spent
+        FROM
+            payment
+        GROUP BY customer_id) AS sub1);
